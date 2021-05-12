@@ -19,57 +19,55 @@ angular.module('lformsApp')
         //   ],
         //
         // }
-        { url: 'https://launch.smarthealthit.org/v/r3/fhir'},
-        { url: 'https://lforms-fhir.nlm.nih.gov/baseDstu3'},
-        { url: 'https://lforms-fhir.nlm.nih.gov/baseR4',
-          smartServiceUrl: 'https://lforms-smart-fhir.nlm.nih.gov/v/r4/fhir',
+        // { url: 'https://launch.smarthealthit.org/v/r3/fhir'},
+        // { url: 'https://lforms-fhir.nlm.nih.gov/baseDstu3'},
+        { url: 'https://api.logicahealth.org/GravitySandboxNew/open',
+          smartServiceUrl: 'https://api.logicahealth.org/GravitySandboxNew/data',
           featuredQuestionnaires: [
-            {
-              name: 'US Surgeon General family health portrait',
-              id: '54127-6-x',
-              code: '54127-6'
-            },
-            {
-              name: 'Weight & Height tracking panel',
-              id: '55418-8-x',
-              code: '55418-8'
-            },
-            {
-              name: 'Comprehensive metabolic 1998 panel',
-              id: '24322-0-x',
-              code: '24322-0'
-            },
-            {
-              name: 'PHQ-9 quick depression assessment panel',
-              id: '44249-1-x',
-              code: '44249-1'
-            },
-            {
-              name: 'Hard Coronary Heart Disease (10-year risk)',
-              id: 'framingham-hchd-lhc'
-              //code: 'framingham-hchd'
-            },
-            {
-              name: 'Health Screening',
-              id: 'sdoh-health-screening'
-            },
-            {
-              name: 'Study drug toxicity panel',
-              id: 'study-drug-tox-x'
-              //code: 'study-drug-tox'
-            },
             // {
-            //   name: 'Glasgow coma scale',
-            //   id: '35088-4-x',
-            //   code: '35088-4'
+            //   name: 'US Surgeon General family health portrait',
+            //   id: '54127-6-x',
+            //   code: '54127-6'
             // },
-            {
-              name: 'AHC HRSN Screening',
-              id: 'lforms-ahn-hrsn-screening'
-            },
+            // {
+            //   name: 'Weight & Height tracking panel',
+            //   id: '55418-8-x',
+            //   code: '55418-8'
+            // },
+            // {
+            //   name: 'Comprehensive metabolic 1998 panel',
+            //   id: '24322-0-x',
+            //   code: '24322-0'
+            // },
+            // {
+            //   name: 'PHQ-9 quick depression assessment panel',
+            //   id: '44249-1-x',
+            //   code: '44249-1'
+            // },
+            // {
+            //   name: 'Hard Coronary Heart Disease (10-year risk)',
+            //   id: 'framingham-hchd-lhc'
+            //   //code: 'framingham-hchd'
+            // },
+            // {
+            //   name: 'Health Screening',
+            //   id: 'sdoh-health-screening'
+            // },
+            // {
+            //   name: 'Study drug toxicity panel',
+            //   id: 'study-drug-tox-x'
+            //   //code: 'study-drug-tox'
+            // },
+            // // {
+            // //   name: 'Glasgow coma scale',
+            // //   id: '35088-4-x',
+            // //   code: '35088-4'
+            // // },
+            // {
+            //   name: 'AHC HRSN Screening',
+            //   id: 'lforms-ahn-hrsn-screening'
+            // },
 
           ]}
       ]
     });
-
-

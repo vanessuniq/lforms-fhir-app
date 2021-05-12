@@ -310,7 +310,7 @@ module.exports = function (grunt) {
       'uglify',
       'rev',
       'usemin',
-      'shell:insertVersionIntoPage'
+      //'shell:insertVersionIntoPage'
 //      'prune_modules'
     ]);
   });
