@@ -568,7 +568,92 @@ fb.service('fhirService', [
         createOrFindAndCall(q, withQuestionnaire);
     };
 
+    /**
+     * Create Questionnaire if it does not exist, and QuestionnaireResponse and
+     * its extracted observations.
+     * Data returned through an angular broadcast event.
+     * @param q the Questionnaire resource
+     * @param qr the QuestionnaireResponse resource
+     * @param con the QuestionnaireResponse resource
+     * @param obsArray the array of Observations extracted from qr
+     * @param qExists true if the questionnaire is known to exist (in which case
+     * we skip the lookup)
+     */
+    thisService.createQQRObsConds = function(q, qr, con, obsArray, qExists) {
+      _terminatingError = null;
 
+      // Build a FHIR transaction bundle to create these resources.
+      var bundle = {
+        resourceType:"Bundle",
+        type: "transaction",
+        entry: []
+      };
+
+      bundle.entry.push({
+        resource: qr,
+        request: {
+          method: "POST",
+          url: "QuestionnaireResponse"
+        }
+      });
+
+      bundle.entry.push({
+        resource: con,
+        request: {
+          method: "POST",
+          url: "Condition"
+        }
+      });
+
+      for (var i=0, len=obsArray.length; i<len; ++i) {
+        bundle.entry.push({
+          resource: obsArray[i],
+          request: {
+            method: "POST",
+            url: "Observation"
+          }
+        });
+      }
+
+      function withQuestionnaire(q) {
+        thisService.fhir.request({url: '', method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(bundle)}).then(
+
+            function success(resp) {
+              debugger;
+              _collectedResults.push(resp);
+              reportResults();
+              // Look through the bundle for the QuestionnaireResource ID
+              var entries = resp.entry;
+              var qrID = null;
+              for (var i=0, len=entries.length; i<len && !qrID; ++i) {
+                var entry = entries[i];
+                var matchData = entry.response && entry.response.location
+                    && entry.response.location.match(/^QuestionnaireResponse\/(\d+)/);
+                if (matchData)
+                  qrID = matchData[1];
+              }
+              $rootScope.$broadcast('LF_FHIR_QR_CREATED', {
+                resType: "QuestionnaireResponse",
+                resource: qr,
+                resId: qrID,
+                qResId: q.id,
+                qName: q.name,
+                extensionType: 'SDC'
+              });
+            },
+            function error(err) {
+              _terminatingError = {resType: 'Bundle', operation: 'create', errInfo: err};
+              reportResults();
+            }
+        );
+      }
+      if (qExists)
+        withQuestionnaire(q);
+      else
+        createOrFindAndCall(q, withQuestionnaire);
+    };
     /**
      *  Reports the results of one or more operations (which might have
      *  terminated in an error.

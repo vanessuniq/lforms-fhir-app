@@ -100,6 +100,44 @@ angular.module('lformsApp')
           // }
         };
 
+        /**
+         * Export QuestionnaireRespose as Bundle with Conditions and Observations
+         * Save the data as a new copy of the specified type of QuestionnaireResponse resource
+         * @param resType resource type, standard QuestionnaireResponse ("QR") or SDC QuestionnaireResponse ("SDC-QR").
+         */
+        $scope.saveAsQR = function(resType) {
+          // create
+          $('.spinner').show();
+          var resArray = LForms.Util.getFormFHIRData('QuestionnaireResponse',
+              fhirService.fhirVersion, $scope.formData, {extract: true,
+                subject: fhirService.getCurrentPatient()});
+
+          var qExists;
+          if ($scope.fhirResInfo.questionnaireResId) {
+            var qData = {id: $scope.fhirResInfo.questionnaireResId, name: $scope.fhirResInfo.questionnaireName};
+            qExists = true; // it is on the server already
+          }
+          else {
+            var copyOfFormData = $scope.valueCleanUp($scope.formData);
+            var qData = LForms.Util.getFormFHIRData('Questionnaire', fhirService.fhirVersion, copyOfFormData);
+            qExists = false;
+          }
+
+          var qr = resArray.shift();
+          if (qData.url) {
+            qr.questionnaire = qData.url;
+          }
+
+          jQuery.ajax('http://localhost:8080/administration/convert', {
+            method: 'POST',
+            crossDomain: true,
+            dataType: "json",
+            data: JSON.stringify(qr)
+          }).done(function (data) {
+            // fhirService.createQQRObsConds(qData, qr, data.con, resArray, qExists);
+          });
+        };
+
 
         /**
          *  Saves the data as a new copy of an SDC QuestionnaireResponse and
