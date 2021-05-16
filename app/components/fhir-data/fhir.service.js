@@ -570,16 +570,16 @@ fb.service('fhirService', [
 
     /**
      * Create Questionnaire if it does not exist, and QuestionnaireResponse and
-     * its extracted observations.
+     * its extracted observations and conditions.
      * Data returned through an angular broadcast event.
      * @param q the Questionnaire resource
      * @param qr the QuestionnaireResponse resource
-     * @param con the QuestionnaireResponse resource
      * @param obsArray the array of Observations extracted from qr
      * @param qExists true if the questionnaire is known to exist (in which case
+     * @param resources the bundle with all resources
      * we skip the lookup)
      */
-    thisService.createQQRObsConds = function(q, qr, con, obsArray, qExists) {
+    thisService.createQQRObsCond = function(q, qr, obsArray, qExists, resources) {
       _terminatingError = null;
 
       // Build a FHIR transaction bundle to create these resources.
@@ -589,31 +589,15 @@ fb.service('fhirService', [
         entry: []
       };
 
-      bundle.entry.push({
-        resource: qr,
-        request: {
-          method: "POST",
-          url: "QuestionnaireResponse"
-        }
-      });
-
-      bundle.entry.push({
-        resource: con,
-        request: {
-          method: "POST",
-          url: "Condition"
-        }
-      });
-
-      for (var i=0, len=obsArray.length; i<len; ++i) {
+      resources.entry.forEach(function (item) {
         bundle.entry.push({
-          resource: obsArray[i],
+          resource: item.resource,
           request: {
             method: "POST",
-            url: "Observation"
+            url: item.resource.resourceType
           }
         });
-      }
+      });
 
       function withQuestionnaire(q) {
         thisService.fhir.request({url: '', method: 'POST',
@@ -621,7 +605,6 @@ fb.service('fhirService', [
           body: JSON.stringify(bundle)}).then(
 
             function success(resp) {
-              debugger;
               _collectedResults.push(resp);
               reportResults();
               // Look through the bundle for the QuestionnaireResource ID
