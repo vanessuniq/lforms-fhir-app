@@ -114,7 +114,7 @@ angular.module('lformsApp')
 
           var qExists;
           if ($scope.fhirResInfo.questionnaireResId) {
-            var qData = {id: $scope.fhirResInfo.questionnaireResId, name: $scope.fhirResInfo.questionnaireName};
+            var qData = {id: $scope.fhirResInfo.questionnaireResId, name: $scope.fhirResInfo.questionnaireName, url: $scope.formData.url};
             qExists = true; // it is on the server already
           }
           else {
