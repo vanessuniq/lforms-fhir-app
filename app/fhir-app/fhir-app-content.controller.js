@@ -131,10 +131,10 @@ angular.module('lformsApp')
           jQuery.ajax('http://localhost:8080/administration/convert', {
             method: 'POST',
             crossDomain: true,
-            dataType: "json",
+            contentType: 'application/json',
             data: JSON.stringify(qr)
           }).done(function (data) {
-            // fhirService.createQQRObsConds(qData, qr, data.con, resArray, qExists);
+            fhirService.createQQRObsCond(qData, qr, resArray, qExists, data);
           });
         };
 
