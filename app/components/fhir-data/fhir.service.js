@@ -599,6 +599,20 @@ fb.service('fhirService', [
         });
       });
 
+      var hasQuestionnaireResponse = bundle.entry.some(function (item) {
+        return item.resource.resourceType === "QuestionnaireResponse";
+      });
+
+      if (!hasQuestionnaireResponse) {
+        bundle.entry.push({
+          resource: qr,
+          request: {
+            method: "POST",
+            url: "QuestionnaireResponse"
+          }
+        });
+      }
+
       function withQuestionnaire(q) {
         thisService.fhir.request({url: '', method: 'POST',
           headers: {'Content-Type': 'application/json'},
