@@ -128,7 +128,7 @@ angular.module('lformsApp')
             qr.questionnaire = qData.url;
           }
 
-          jQuery.ajax('http://localhost:8080/administration/convert', {
+          jQuery.ajax('https://sdoh-exchange-ri-ehr.herokuapp.com/administration/convert', {
             method: 'POST',
             crossDomain: true,
             contentType: 'application/json',
