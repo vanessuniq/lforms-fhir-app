@@ -32,22 +32,26 @@
     "superagent": "^6.1.0",
     "time-grunt": "^1.4.0",
     "tmp": "0.0.33",
-    "uglify-js": "3.9.1"
+    "uglify-js": "3.9.1",
+    "bower": ">=1.3.12"
+  },
+  "engines": {
+    "node": "10.24.1"
   },
   "scripts": {
-    "postinstall": "bower install && npm run update-webdriver",
+    "postinstall": "bower cache clean && bower install && npm run update-webdriver",
     "update-deps": "npm update",
     "postupdate-deps": "bower update",
     "cp-lforms-updater": "mkdir -p app/lforms-updater; cp node_modules/lforms-updater/browser/updater.js* app/lforms-updater/",
     "cp-fhirclient": "cp node_modules/fhirclient/build/fhir-client.js app",
     "copy-npm-scripts": "npm run cp-lforms-updater && npm run cp-fhirclient",
     "build": "npm run copy-npm-scripts && grunt build",
-    "prestart": "echo 'Website starting at http://localhost:8000/lforms-fhir-app'",
-    "start": "http-server -s -p 8000 -c-1 .",
+    "prestart": "npm run cp-lforms-updater && echo 'Website starting at http://localhost:$PORT/lforms-fhir-app'",
+    "start": "http-server -s -p $PORT -c-1 .",
     "prestart-local": "npm run prestart",
-    "start-local": "http-server -s -a localhost -p 8000 -c-1 .",
-    "prestart-dist": "echo 'Website starting at http://localhost:8000/lforms-fhir-app'",
-    "start-dist": "http-server -p 8000 -c-1 dist",
+    "start-local": "http-server -s -a localhost -p $PORT -c-1 .",
+    "prestart-dist": "echo 'Website starting at http://localhost:$PORT/lforms-fhir-app'",
+    "start-dist": "http-server -p $PORT -c-1 dist",
     "update-webdriver": "node node_modules/protractor/bin/webdriver-manager update --versions.chrome $(google-chrome --version |awk '{print $NF}')",
     "test": "npm run start-local & sleep 5; protractor e2e-tests/protractor.conf.js; s=$?; kill %1; exit $s",
     "test-dist": "npm run start-dist & sleep 5; protractor e2e-tests/protractor.conf.js; s=$?; kill %1; exit $s"
